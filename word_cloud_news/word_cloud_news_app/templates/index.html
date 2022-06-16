@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>News Headline Word Clouds</title>
+    <link rel= "stylesheet" type= "text/css" 
+    href= "{{ url_for('static',filename='styles/main.css') }}">
+</head>
+<body>
+    
+    <h1 id="title"> News Headline Word Clouds </h2>
+
+    <div id="page_content">
+
+        <img id="word_cloud_image" src="data:image/png;base64,{{ user_image }}" 
+        alt="Word Cloud">
+        
+        <div id="user_input_section">
+            
+            <h3 id="curr_date_display">Date: <span id="curr_date_display_val"> 
+            </span> </h3>
+            
+            <form method="post" action="/">
+                
+                <input id="date_slider" type="range" min="0" class="slider" 
+                name="dateIndex" onChange="update_date_display(this.value)" 
+                onmousemove="update_date_display(this.value)">
+                
+                <div id="checkboxes">
+                    <input type="checkbox" id="BBC_box" name="sources_to_show" 
+                    value="BBC" checked>
+                    <label for="vehicle1">BBC</label><br>
+                    
+                    <input type="checkbox" id="Fox_box" name="sources_to_show" 
+                    value="Fox News" checked>
+                    <label for="vehicle2">Fox News</label><br>
+                    
+                    <input type="checkbox" id="Al_Jazeera_box" name="sources_to_show" 
+                    value="Al Jazeera" checked>
+                    <label for="vehicle3">Al Jazeera</label><br>
+
+                    <input class="checkmark" type="checkbox" id="NYT_box" name="sources_to_show" 
+                    value="New York Times" checked>
+                    <label for="vehicle3">New York Times</label><br>
+
+                    <input type="checkbox" id="Vox_box" name="sources_to_show" 
+                    value="Vox" checked>
+                    <label for="vehicle3">Vox</label><br>
+
+                    <input type="checkbox" id="Guardian_box" name="sources_to_show"
+                    value="The Guardian" checked>
+                    <label for="vehicle3">The Guardian</label><br>
+                </div>
+
+                <input id="submission_button" type="submit" value="Generate"/>
+            </form>
+        </div>
+</div>
+
+    <!-- Javascript is included here rather than in a seperate file because
+         of the need to access the date_list Jinja variable -->
+    <script>
+        var dates = {{ date_list|tojson }}
+        var slider = document.getElementById("date_slider")
+        slider.setAttribute("max", (dates.length - 1))
+        slider.setAttribute("value", dates.length)
+    
+        var date_display = document.getElementById("curr_date_display_val")
+        date_display.innerHTML = dates[dates.length - 1]
+    
+        function update_date_display(value) {  
+            dates = {{ date_list|tojson }}
+            document.getElementById('curr_date_display_val').innerHTML = dates[value]
+        }
+    
+    </script>
+</body>
+
+
+</html>

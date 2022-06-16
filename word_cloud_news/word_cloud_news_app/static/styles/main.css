@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+body {
+    background-color: #000000; 
+    color: white;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#title {
+    margin: 30px;
+    font-size: 40px;
+}
+
+#page_content {
+    display: flex;
+}
+
+#word_cloud_image {
+    width: 800px;
+    border: 1px solid white;
+}
+
+#user_input_section {
+    padding: 10px;
+    margin: 30px;
+}
+
+#curr_date_display {
+    font-size: 30px;
+}
+
+#date_slider {
+    width: 200px;
+    height: 10px;
+    margin: 15px;
+    margin-left: 0px;
+}
+
+.checkmark {
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+  }
+
+input[type="checkbox"]  {
+    height: 20px;
+    width: 20px;
+    margin: 10px;
+    margin-right: 5px;
+}
+
+label {
+    font-size: 25px
+}
+
+#submission_button {
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+  padding: 15px;
+  margin: 10px;
+  text-align: center;
+  font-size: 25px;
+}
+
+#submission_button:hover {
+    background-color: white; 
+    color: black;
+  }
