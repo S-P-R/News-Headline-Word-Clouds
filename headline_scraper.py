@@ -1,55 +1,78 @@
+#!/usr/bin/env python3
+"""
+File: headline_scraper.py
+Author: Sean Reilly
+Description: Scrapes news headlines and adds them to a Postgres database
+"""
+
 import requests
 from bs4 import BeautifulSoup
 from datetime import date
+import psycopg2
+import psycopg2.extras
+import logging
+import re
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import configparser
 
-from pymongo import MongoClient
-import dns
+MAX_HEADLINE_LENGTH = 100
+logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(asctime)s | %(message)s")
+sid_obj= SentimentIntensityAnalyzer()
 
-from wordcloud import WordCloud, STOPWORDS
-import matplotlib.pyplot as plt
+def connect_to_db() -> psycopg2.extensions.connection:
+    """Returns a connection to a Postgres database"""
+    try:
+        config_parser = configparser.ConfigParser()
+        config_parser.read("database.ini")
+        config_params = config_parser.items("postgresql_conn_data")
+        db_conn_dict = {}
+        for name, value in config_params:
+            db_conn_dict[name] = value
+        return psycopg2.connect(**db_conn_dict)
+    except (configparser.Error, psycopg2.Error) as e:
+        logging.critical(e)
+        raise ConnectionError("Failed to connect to Postgres database")
 
-# Array of news sources to crawl for headlines. Each source has a name, a link,
-# the tag html tag used to represent most headlines and the name of the class
-# associated with those headlines
-to_crawl = [("BBC", "https://www.bbc.com/", "a", "media__link"),
-            ("Fox News", "https://www.foxnews.com/", "h2", "title"),
-            ("Al Jazeera", "https://www.aljazeera.com/", "a", "u-clickable-card__link"),
-            ("New York Times", "https://www.nytimes.com/", "div", "css-xdandi"),
-            ("Vox", "https://www.vox.com/", "h2", "c-entry-box--compact__title"),
-            ("The Guardian", "https://www.theguardian.com/world", "a", "u-faux-block-link__overlay js-headline-text")]
+def calculate_sentiment(s : str) -> float:
+    """Returns the sentiment (between -1 and 1) of a string"""
+    sentiment_dict = sid_obj.polarity_scores(s)
+    return sentiment_dict["compound"]
 
-# dict with dates as key, containing dicts with newssource as key, containing 
-# a list of article titles
-daily_news_dict = {
-    "date": date.today().strftime("%y/%m/%d"),
-    "sources": []
-    }
+conn = connect_to_db()
+cursor = conn.cursor()
 
-for news_source in to_crawl:
-    URL = news_source[1]
-    source_dict = {
-        "source_name": news_source[0],
-        "source_link": URL, 
-        "headlines": []
-    }
-    
-    page = requests.get(URL)
-    soup = BeautifulSoup(page.content, "html.parser")
-    
-    # Note: the find_all method is used rather than the seemingly more simple 
-    #       select method because the select method doesn't work for class names
-    #       containing whitespace
-    elements = soup.find_all(news_source[2], class_=news_source[3])
-    for element in elements:
-            source_dict["headlines"].append(element.text.strip())
-    
-    daily_news_dict["sources"].append(source_dict)
-    print("Finished " + URL)
+# Array of news source homepages to crawl for headlines. Each source has a
+# name, a link, and an attribute, attribute-value pair that identify headlines
+to_crawl = [("New York Times", "https://www.nytimes.com/", {"class": re.compile("indicate-hover")}),
+            ("Washington Post", "https://www.washingtonpost.com/", {"data-pb-local-content-field": "web_headline"}),
+            ("Fox News", "https://www.foxnews.com/", {"class": "title"}), 
+            ("BBC", "https://www.bbc.com/", {"data-testid": re.compile("headline")}),  
+            ("Al Jazeera", "https://www.aljazeera.com/", {"class": "u-clickable-card__link"}), 
+            ("South China Morning Post", "https://www.scmp.com/", {"data-qa": "ContentHeadline-Headline"})]
+       
+for source_name, URL, filters in to_crawl:
+    try:
+        # Enter source into db if it doesn"t already exist
+        cursor.execute("INSERT INTO news_headlines.source VALUES (%s, %s) ON CONFLICT DO NOTHING", (source_name, URL))
+        conn.commit()
 
+        page = requests.get(URL, headers={"user-agent": "wc-headline-scraper"})
+        soup = BeautifulSoup(page.content, "html.parser")
+        elements = soup.find_all(attrs=filters)
 
-CONNECTION_STRING = "mongodb+srv://SPR:upQEVi7ckhI05C82@cluster0.nbkwl.mongodb.net/?retryWrites=true&w=majority"
-client = MongoClient(CONNECTION_STRING)
+        headlines = [element.get_text(strip=True) for element in elements]
+        headlines = [headline.replace("\xad", "") for headline in headlines] # Remove soft hyphens
+        headlines = list(set(headlines)) # Filter out duplicates 
+        # Unlikely to be actual headline if under 4 words
+        headlines = filter(lambda h: len(h.split()) > 3 and len(h) <= MAX_HEADLINE_LENGTH, headlines) 
+        headline_data = [(headline, date.today(), calculate_sentiment(headline), source_name) for headline in headlines]
 
-db = client.news_word_cloud
-headlines = db.daily_news_headlines
-headlines.insert_one(daily_news_dict)
+        query = "INSERT INTO news_headlines.headline(text, date, sentiment, source) VALUES (%s, %s, %s, %s)"
+        psycopg2.extras.execute_batch(cursor, query, headline_data)
+        conn.commit()
+        logging.info(f"Finished {source_name}")
+    except (psycopg2.Error, requests.exceptions.RequestException) as e:
+        conn.rollback()
+        logging.error(f"{source_name} Failed: {e}")
+
+conn.close()
