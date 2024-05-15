@@ -25,3 +25,4 @@ class Headline(db.Model):
     date = db.Column(db.Date, primary_key=True)
     sentiment = db.Column(db.Float)
     source = db.Column(db.String(50), db.ForeignKey('news_headlines.source.name'), nullable=False)
+    
