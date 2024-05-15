@@ -1,5 +1,7 @@
 **/venv/*
-**/pycache/*
+**/__pycache__/*
 **/.DS_Store
 *.ini
 .env
+**/parser.out
+**/parsetab.py
