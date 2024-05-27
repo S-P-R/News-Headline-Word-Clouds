@@ -25,4 +25,15 @@ class Headline(db.Model):
     date = db.Column(db.Date, primary_key=True)
     sentiment = db.Column(db.Float)
     source = db.Column(db.String(50), db.ForeignKey('news_headlines.source.name'), nullable=False)
+
+@dataclass
+class DateSummary(db.Model):
+    __tablename__ = 'date_summary'
+    __table_args__ = {'schema': 'news_headlines'}
+    date: datetype
+    avg_sentiment: float
+    
+    date = db.Column(db.Date, primary_key=True)
+    avg_sentiment = db.Column(db.Float)
+   
     
