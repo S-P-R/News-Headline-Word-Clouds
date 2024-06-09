@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import date as datetype
-from app import db
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
 
 @dataclass
 class Source(db.Model):
