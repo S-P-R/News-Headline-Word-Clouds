@@ -20,7 +20,7 @@ from HeadlineAPI.models import Headline, Source, DateSummary
                                 ["LexToken(FIELD_NAME,'property',1,0)", 
                                  "LexToken(EQ,'eq',1,9)", 
                                  "LexToken(STRING_VAL,'value',1,12)"]),
-                            # test if boolean osp can be tokenized
+                            # test if boolean ops can be tokenized
                             ("property eq 'value' and property2 neq 3", 
                                 ["LexToken(FIELD_NAME,'property',1,0)", 
                                  "LexToken(EQ,'eq',1,9)", 
@@ -42,9 +42,7 @@ from HeadlineAPI.models import Headline, Source, DateSummary
                         ], 
                         ids=['simple_constraint', 'boolean_ops', 'string_containing_quote', 'illegal_character'])
 def test_lexing(test_input, expected_token_strs):
-    """
-        Test that the lexer tokenizes input correctly 
-    """
+    """Test that the lexer tokenizes input correctly"""
     _, lexer  = construct_parser(Headline)
     lexer.input(test_input)
     token_count = 0
@@ -54,3 +52,39 @@ def test_lexing(test_input, expected_token_strs):
             break      
         assert expected_token_strs[token_count] == str(tok)
         token_count += 1
+
+@pytest.mark.parametrize("test_input, expected_sqlalchemy_str", 
+                         [
+                            # test if a single constraint can be parsed
+                            ("text eq 'value'", "news_headlines.headline.text = :text_1"),
+                            # test if expressions with boolean ops can be parsed
+                            ("text eq 'value' or sentiment gt .5 and source neq 'src_name'", 
+                                ("news_headlines.headline.text = :text_1 OR "
+                                 "news_headlines.headline.sentiment > :sentiment_1 "
+                                 "AND news_headlines.headline.source != :source_1"))
+                        ], 
+                        ids=['simple_constraint', 'boolean_ops'])
+def test_parsing(test_input, expected_sqlalchemy_str):
+    """Test that the parser parses tokens correctly"""
+    parser, lexer  = construct_parser(Headline)
+    result = parser.parse(test_input, lexer=lexer)
+    assert str(result) == expected_sqlalchemy_str
+  
+@pytest.mark.parametrize("test_input", 
+                         [
+                            # test that trying to filter on a field that doesn't
+                            # exist on the specified model raises an exception
+                            "fake_field eq 1",
+                            # test that trying to parse an expression with a partial
+                            # boolean op raises an exception
+                            "text eq 1 and",
+                            # test that trying to parse an expression with unclosed
+                            # parentheses raises an exception
+                            "((text eq 1)"
+                        ], 
+                        ids=['nonexistant_field', 'partial_boolean_op', 'unclosed_parens'])
+def test_parsing_error(test_input):
+    """Test that the parser raises exceptions when it should"""
+    with pytest.raises(Exception):
+        parser, lexer  = construct_parser(Headline)
+        parser.parse(test_input, lexer=lexer)
