@@ -18,8 +18,8 @@ def construct_parser(model):
     }
 
     precedence = (
-        ('left', 'AND'),
         ('left', 'OR'),
+        ('left', 'AND'),
     )
 
     tokens = ['FIELD_NAME', 'STRING_VAL', 'NUM_VAL', 'LPAREN', 'RPAREN'] + list(ops.values())
@@ -29,7 +29,7 @@ def construct_parser(model):
     ##########################
 
     # Match a character from alphabet or '_', followed by any number of alphanumeric 
-    # characters or '_'s, followed by whitespace, followed by a binary op
+    # characters or '_'s, followed by whitespace
     def t_FIELD_NAME(t):
         r'[a-zA-Z_][\w]*'
         # Prevents ops from being lexed as field names
@@ -44,7 +44,7 @@ def construct_parser(model):
         return t
 
     def t_NUM_VAL(t):
-        r'[+-]?(\d+(\.\d*)?|\.\d+)(\s+|$)'
+        r'[+-]?(\d+(\.\d*)?|\.\d+)'
         t.value = float(t.value)    
         return t
 
@@ -62,8 +62,6 @@ def construct_parser(model):
     ###########################
     # ####### PARSING ####### #
     ###########################
-
-    # parser = yacc.yacc()'
 
     def p_expression_parens(p):
         'expression : LPAREN expression RPAREN'
@@ -107,7 +105,7 @@ def construct_parser(model):
             p[0] = (getattr(model, p[1]) < p[3])
 
     def p_error(p):
-        print("Syntax error in input!") #TODO: replace with actual message
+        raise RuntimeError("Invalid syntax")
 
     parser = yacc.yacc()
     return (parser, lexer)
