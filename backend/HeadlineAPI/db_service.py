@@ -2,28 +2,14 @@ from flask import jsonify
 from app import db
 from models import Headline, Source, DateSummary
 
-def fetch_headlines(filters):
-    query = db.select(Headline)
+def fetch_data(to_fetch, filters = None, limit : int = None, offset : int = None):
+    query = db.select(to_fetch)
     if filters is not None:
          query = query.filter(filters)
-    
-    result = db.session.execute(query).scalars()
-    serialized_result = serialize(result)
-    return serialized_result
-
-def fetch_sources(filters):
-    query = db.select(Source)
-    if filters is not None:
-         query = query.filter(filters)
-    
-    result = db.session.execute(query).scalars()
-    serialized_result = serialize(result)
-    return serialized_result
-
-def fetch_dates(filters):
-    query = db.select(DateSummary)
-    if filters is not None:
-         query = query.filter(filters)
+    if limit is not None:
+        query = query.limit(limit)
+    if offset is not None:
+        query = query.offset(offset)
     
     result = db.session.execute(query).scalars()
     serialized_result = serialize(result)
