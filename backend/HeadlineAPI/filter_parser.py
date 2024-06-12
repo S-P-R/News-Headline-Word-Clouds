@@ -3,6 +3,7 @@
 import ply.lex as lex
 import ply.yacc as yacc
 from sqlalchemy import or_, and_
+from exceptions import FilterParseException
 
 def construct_parser(model):  
     
@@ -105,7 +106,7 @@ def construct_parser(model):
             p[0] = (getattr(model, p[1]) < p[3])
 
     def p_error(p):
-        raise RuntimeError("Invalid syntax")
+        raise FilterParseException("Invalid $filter syntax")
 
     parser = yacc.yacc()
     return (parser, lexer)

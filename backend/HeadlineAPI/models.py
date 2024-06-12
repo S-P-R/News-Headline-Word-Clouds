@@ -9,6 +9,7 @@ class Source(db.Model):
     __table_args__ = {'schema': 'news_headlines'}
     name: str
     link: str
+    
     name = db.Column(db.String(50), primary_key=True)
     link = db.Column(db.String(50))
     headlines = db.relationship('Headline')
