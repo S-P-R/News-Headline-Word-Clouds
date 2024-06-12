@@ -1,3 +1,10 @@
+"""
+File: dates.py
+Author: Sean Reilly
+Description: Contains HTTP routes to interact with the dates that headlines have
+             been gathered for 
+"""
+
 from app import app
 from flask import request, jsonify
 from db_service import fetch_data

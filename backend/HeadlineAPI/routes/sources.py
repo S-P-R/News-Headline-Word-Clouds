@@ -1,3 +1,9 @@
+"""
+File: headlines.py
+Author: Sean Reilly
+Description: Contains HTTP routes to interact with news sources
+"""
+
 from flask import request, jsonify
 from app import app
 from models import Source

@@ -1,3 +1,8 @@
+"""
+File: app.py
+Author: Sean Reilly
+Description: Root file of the API
+"""
 from flask import Flask
 import os
 from dotenv import load_dotenv

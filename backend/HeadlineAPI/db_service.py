@@ -1,8 +1,25 @@
-from flask import jsonify
+"""
+File: db_service.py
+Author: Sean Reilly
+Description: Handles interactions with the application's database
+"""
+
 from app import db
-from models import Headline, Source, DateSummary
 
 def fetch_data(to_fetch, filters = None, limit : int = None, offset : int = None):
+    """
+    Fetches data from a SQLAlchemy database session
+
+    Args:
+        to_fetch: An object that maps onto the database data that's should be fetched
+        filters: Filters used to filter the data being fetched
+        limit: A Maxiumum # of db rows to retrieve 
+        offset: A number of rows to be skipped/not-fetched
+
+    Returns:
+        A list of values taken from the database
+    """
+
     query = db.select(to_fetch)
     if filters is not None:
          query = query.filter(filters)

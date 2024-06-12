@@ -1,3 +1,10 @@
+"""
+File: models.py
+Author: Sean Reilly
+Description: Defines models that correspond to data representations within the
+             application's database
+"""
+
 from dataclasses import dataclass
 from datetime import date as datetype
 from flask_sqlalchemy import SQLAlchemy

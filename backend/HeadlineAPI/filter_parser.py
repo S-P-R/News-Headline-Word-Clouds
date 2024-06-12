@@ -1,4 +1,14 @@
-# TODO: add documentation
+"""
+File: filter_parser.py
+Author: Sean Reilly
+Description: Contains functionality used to lex and parse the $filter query 
+             parameter that's accepted by the API's GET routes, creating
+             SQLAlchemy objects that can be used to make
+             database queries
+
+             The syntax expected by the lexer and parser is inspired by the 
+             OData API specifications 
+"""
 
 import ply.lex as lex
 import ply.yacc as yacc
@@ -6,7 +16,25 @@ from sqlalchemy import or_, and_
 from exceptions import FilterParseException
 
 def construct_parser(model):  
+    """
+    Creates a lexer and parser that can be used to parse OData-inspired $filters
+
+    Args:
+        model: An object that maps onto the database data that's being filtered
+
+    Returns:
+        A (parser, lexer) tuple
+        parser: Used to parse the tokens created by the lexer, creating a 
+                SQLAlchemy object that can be used to make database queries
+        lexer: Converts a $filters string value into a series of tokens that 
+               can then be parsed
     
+    Notes: 
+        Variables and inner functions that are seemingly unused are used by
+        ply to create the lexer and parser.
+        Despite lexers being independent of a specific model unlike parsers, I 
+        couldn't find a way to create a lexer and parser in seperate functions
+    """
     ops = {
         'and' : 'AND',
         'or' : 'OR',
