@@ -92,7 +92,16 @@ def construct_parser(model):
                     | FIELD_NAME GT value
                     | FIELD_NAME LE value
                     | FIELD_NAME LT value'''
-        if p[2] == 'eq':
+        if p[1] not in model.__table__.columns:
+            column_names = str([column.name for column in model.__table__.columns])
+            raise FilterParseException(f"Properties in $filter must be one of {column_names}")
+        # uses model's type annotations (if present) to check that the value
+        # is of the correct type
+        elif (p[1] in model.__annotations__ and model.__annotations__[p[1]] != type(p[3])):
+            raise FilterParseException(f"Values used to constrain {p[1]} must be "
+                                       f"of type {model.__annotations__[p[1]].__name__}, "
+                                       f"not {type(p[3]).__name__}")
+        elif p[2] == 'eq':
             p[0] = (getattr(model, p[1]) == p[3])
         elif p[2] == 'neq':
             p[0] =  p[0] = (getattr(model, p[1]) != p[3])

@@ -7,9 +7,10 @@ db = SQLAlchemy()
 class Source(db.Model):
     __tablename__ = 'source'
     __table_args__ = {'schema': 'news_headlines'}
+    # model type annotations are used by filter_parser for type checking
     name: str
     link: str
-    
+
     name = db.Column(db.String(50), primary_key=True)
     link = db.Column(db.String(50))
     headlines = db.relationship('Headline')

@@ -23,10 +23,8 @@ def get_sources():
         return fetch_data(Source, filters, top, skip)
     except ValueError: 
         return jsonify(error="$top and $skip must be integers"), 400
-    except FilterParseException:
-        return jsonify(error="$filter syntax could not be successfully parsed"), 400
-    except AttributeError:
-        return jsonify(error="properties in $filter must be either name or link"), 400
+    except FilterParseException as e:
+        return jsonify(error=e.message), 400
     except SQLAlchemyError:
         return jsonify(error="There was an error retrieving data from the database"), 500
     except Exception:
