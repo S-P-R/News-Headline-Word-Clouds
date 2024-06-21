@@ -46,3 +46,4 @@ typing-extensions==4.12.2
     # via sqlalchemy
 werkzeug==3.0.3
     # via flask
+flask-cors==4.0.1

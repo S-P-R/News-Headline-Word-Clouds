@@ -4,6 +4,7 @@ Author: Sean Reilly
 Description: Root file of the API
 """
 from flask import Flask
+from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
@@ -12,6 +13,7 @@ load_dotenv()
 db = SQLAlchemy()
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_CONN_STRING")
+CORS(app)
 db.init_app(app)
 
 from filter_parser import construct_parser
