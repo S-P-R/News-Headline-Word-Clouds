@@ -27,7 +27,6 @@ class Headline(db.Model):
     __tablename__ = 'headline'
     __table_args__ = {'schema': 'news_headlines'}
     text: str
-    date: datetype
     sentiment: float
     source: str
 
