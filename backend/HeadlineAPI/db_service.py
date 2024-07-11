@@ -6,13 +6,14 @@ Description: Handles interactions with the application's database
 
 from app import db
 
-def fetch_data(to_fetch, filters = None, limit : int = None, offset : int = None):
+def fetch_data(to_fetch, filters = None, ordering = None, limit : int = None, offset : int = None):
     """
     Fetches data from a SQLAlchemy database session
 
     Args:
         to_fetch: An object that maps onto the database data that's should be fetched
         filters: Filters used to filter the data being fetched
+        ordering: Sorts results by a field in ascending or descending order
         limit: A Maxiumum # of db rows to retrieve 
         offset: A number of rows to be skipped/not-fetched
 
@@ -23,6 +24,8 @@ def fetch_data(to_fetch, filters = None, limit : int = None, offset : int = None
     query = db.select(to_fetch)
     if filters is not None:
          query = query.filter(filters)
+    if ordering is not None:
+        query = query.order_by(ordering)
     if limit is not None:
         query = query.limit(limit)
     if offset is not None:

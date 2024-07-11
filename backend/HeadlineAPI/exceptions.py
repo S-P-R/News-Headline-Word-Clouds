@@ -9,3 +9,9 @@ class FilterParseException(Exception):
     def __init__(self, message):
         self.message = message
         super().__init__(self.message)
+
+class OrderByException(Exception):
+    """Raised if there's a problem with the $orderby query param"""
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
