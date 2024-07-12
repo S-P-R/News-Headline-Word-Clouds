@@ -7,19 +7,46 @@ function logistic(x: number, max: number = 1, growth_rate: number = 1, x_midpoin
   return max / (1 + Math.exp(-growth_rate * (x - x_midpoint)));
 }
 
+function normalize(value: number, curr_range_min: number, curr_range_max: number, 
+                   desired_min: number, desired_max: number): number {
+  /* Scales value between 0 and 1 */
+  let scaled = (value - curr_range_min)  / (curr_range_max - curr_range_min)   
+  /* Scaled values into desired range */
+  scaled = scaled * (desired_max - desired_min) + desired_min
+  return scaled
+}
+
 const WordCloud = ({ words }) => {
   const svgRef = useRef();
+  const randomColor = () => {
+    let colors = ["#434343", "#6e6e6e", "#8A8A8A"]
+    return colors[Math.floor(Math.random() * colors.length)];
+  }; /* TODO: remove? */
+
 
   useEffect(() => {
+    // words.map(w => {console.log(w[0]); return w})
+
     const svg = d3.select(svgRef.current);
     const width = 800;
     const height = 800;
 
     svg.attr('width', width).attr('height', height);
 
+    let word_counts = words.map((w) => w[1])
+    let min_count = word_counts.reduce((a, b) => Math.min(a, b), word_counts[0])
+    let max_count = word_counts.reduce((a, b) => Math.max(a, b), word_counts[0])
+
+  
+   
+    let scaled_words = words.map(w => ([w[0], normalize(w[1], min_count, max_count, 1, 500)]))  
+    scaled_words = scaled_words.map(w => ([w[0], logistic(w[1], 50, .05, 45)]))  
+
+    // scaled_words.map(w => {console.log(w[0]); return w})
+
     const layout = cloud()
       .size([width, height])
-      .words(words.map(d => ({ text: d[0], size: logistic(d[1], 50, .05, 45) })))
+      .words(scaled_words.map(d => ({ text: d[0], size:d[1]})))
       .padding(5)
       .rotate(() => (~~(Math.random() * 6) - 3) * 30)
       .font('Impact')
@@ -38,7 +65,7 @@ const WordCloud = ({ words }) => {
         .append('text')
         .style('font-size', d => `${d.size}px`)
         .style('font-family', 'Impact')
-        .style('fill', (d, i) => 'grey')
+        .style('fill', function(d) { return randomColor(); })
         .attr('text-anchor', 'middle')
         .attr('transform', d => `translate(${d.x},${d.y})rotate(${d.rotate})`)
         .text(d => d.text);

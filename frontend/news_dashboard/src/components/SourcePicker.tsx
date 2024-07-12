@@ -43,7 +43,6 @@ const SourcePicker = ({selectedSources, setSelectedSources, setGotSources} :  So
     return (
       <FormControl
         required={true}
-        // error={selectedSources.length == 0}
         component="fieldset"
         sx={{ m: 3 }}
         variant="standard"

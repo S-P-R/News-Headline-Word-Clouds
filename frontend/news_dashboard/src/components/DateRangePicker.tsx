@@ -24,7 +24,7 @@ const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDa
 
   useEffect(() => {
     async function setUp() {
-      const response = await fetch('http://127.0.0.1:5000/dates'); /* TODO: replace URL */
+      const response = await fetch('http://127.0.0.1:5000/dates?$orderby=date desc'); /* TODO: replace URL */
       const data = await response.json();
       const dateSet = new Set(data.map(dateInfo => formatDate(dateInfo.date)))
       setDates(dateSet)
@@ -53,7 +53,9 @@ const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDa
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} >
       {/* TODO: switch to mobile date picker on small screen size */}
+      <p>Start Date</p>
       <DatePicker shouldDisableDate={disableDates} value={startDate} onChange={(newValue) => setStartDate(newValue)}/>
+      <p>End Date</p>
       <DatePicker shouldDisableDate={disableDates} value={endDate} onChange={(newValue) => setEndDate(newValue)}/>
 
     
