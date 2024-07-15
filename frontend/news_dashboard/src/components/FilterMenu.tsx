@@ -65,23 +65,23 @@ const FilterMenu = ({setWordFreqs} :  FilterMenuProps) => {
        * initialized. Afterwards, wordclouds will only be generated when the 
        * user clicks the 'Generate' button 
        * */
-      useEffect(() => {
-        if (gotSources && gotDates){
-          getWordFreqs(selectedSources)
-        }
-      }, [gotSources, gotDates]);
+    useEffect(() => {
+      if (gotSources && gotDates){
+        getWordFreqs(selectedSources)
+      }
+    }, [gotSources, gotDates]);
 
 
-      return (
-        <div className='filter-menu'>
-          <DateRangePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} setGotDates={setGotDates} />
-          <SourcePicker selectedSources={selectedSources} setSelectedSources={setSelectedSources} setGotSources={setGotSources} />
-          <Button variant='contained' onClick={() => {getWordFreqs(selectedSources)}} 
-                  disabled={selectedSources.length == 0 || !startDate || !endDate || startDate > endDate}>
-            Generate Wordcloud
-          </Button>
-        </div>
-      )
+    return (
+      <div className='filter-menu'>
+        <DateRangePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} setGotDates={setGotDates} />
+        <SourcePicker selectedSources={selectedSources} setSelectedSources={setSelectedSources} setGotSources={setGotSources} />
+        <Button variant='contained' onClick={() => {getWordFreqs(selectedSources)}} 
+                disabled={selectedSources.length == 0 || !startDate || !endDate || startDate > endDate}>
+          Generate Wordcloud
+        </Button>
+      </div>
+    )
 }
 
 export default FilterMenu;

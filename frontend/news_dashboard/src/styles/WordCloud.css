@@ -1,0 +1,11 @@
+/* 
+ * Styling being applied to a wrapper div rather than the svg wordcloud itself
+ * allows for users to scroll the wordcloud when words would otherwise overflow
+ */
+.word-cloud-wrapper {
+    overflow: scroll;
+    width: max-content;
+    height: max-content;
+    background-color: white;
+    border: .2rem solid #800020;
+}

@@ -21,11 +21,10 @@ function App() {
   const [wordFreqs, setWordFreqs] = useState([]);
   return (
     <ThemeProvider theme={theme}>
-      {/* <h1 className='title'> News Headline Dashboard </h1> */}
       <Navbar/>
       <div className='content'>
         <FilterMenu setWordFreqs={setWordFreqs}/>
-        <div className='word-cloud'> {<WordCloud words={wordFreqs}/>} </div>
+        <WordCloud words={wordFreqs}/>
       </div>
     </ThemeProvider>
   )

@@ -4,7 +4,7 @@ import { Link } from 'react-scroll';
 const Navbar = () => {
     return (
         <div className="nav-bar">
-            <h1 className='title'> News Headline Dashboard </h1>
+            <h1 className='title'> News&nbsp;&nbsp;Headline&nbsp;&nbsp;Dashboard </h1>
         </div>
     );
   };
