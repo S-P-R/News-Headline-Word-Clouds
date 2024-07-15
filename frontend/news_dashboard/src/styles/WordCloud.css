@@ -4,7 +4,6 @@
  */
 .word-cloud-wrapper {
     overflow: scroll;
-    width: max-content;
     height: max-content;
     background-color: white;
     border: .2rem solid #800020;
