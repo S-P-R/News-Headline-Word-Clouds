@@ -25,11 +25,11 @@ const WordCloud = ({ words }) => {
 
 
   useEffect(() => {
-    // words.map(w => {console.log(w[0]); return w})
-
     const svg = d3.select(svgRef.current);
-    const width = 800;
-    const height = 800;
+    // const width = 800;
+    // const height = 800;
+    const width = 750;
+    const height = 750;
 
     svg.attr('width', width).attr('height', height);
 
@@ -42,9 +42,8 @@ const WordCloud = ({ words }) => {
     let scaled_words = words.map(w => ([w[0], normalize(w[1], min_count, max_count, 1, 500)]))  
     scaled_words = scaled_words.map(w => ([w[0], logistic(w[1], 50, .05, 45)]))  
 
-    // scaled_words.map(w => {console.log(w[0]); return w})
-
     const layout = cloud()
+      .spiral("rectangular")
       .size([width, height])
       .words(scaled_words.map(d => ({ text: d[0], size:d[1]})))
       .padding(5)

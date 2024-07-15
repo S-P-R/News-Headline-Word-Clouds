@@ -1,0 +1,6 @@
+.filter-menu {
+    display: flex;
+    flex-direction: column;
+    /* border: .1rem solid #800020; */
+    padding: .5rem
+}

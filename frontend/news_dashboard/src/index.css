@@ -1,0 +1,12 @@
+:root {
+    color: #333333;
+    background-color: ivory;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1rem;
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.25rem);
+  }
+
+body {
+    margin: 0;
+    padding: 0;
+  } 
