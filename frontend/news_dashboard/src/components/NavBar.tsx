@@ -1,10 +1,9 @@
 import '../styles/NavBar.css'
-import { Link } from 'react-scroll';
 
 const Navbar = () => {
     return (
         <div className="nav-bar">
-            <h1 className='title'> News&nbsp;&nbsp;Headline&nbsp;&nbsp;Dashboard </h1>
+            <h1 className='title'> News&#32;&#32;Headline&#32;&#32;Dashboard</h1>
         </div>
     );
   };

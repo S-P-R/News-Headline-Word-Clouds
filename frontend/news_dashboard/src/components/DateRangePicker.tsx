@@ -26,7 +26,7 @@ const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDa
     async function setUp() {
       const response = await fetch('http://127.0.0.1:5000/dates?$orderby=date desc'); /* TODO: replace URL */
       const data = await response.json();
-      const dateSet = new Set(data.map(dateInfo => formatDate(dateInfo.date)))
+      const dateSet = new Set(data.map((dateInfo : any) => formatDate(dateInfo.date)))
       setDates(dateSet)
 
       setStartDate(dayjs(formatDate(data[0].date)))

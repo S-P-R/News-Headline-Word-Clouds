@@ -1,12 +1,12 @@
 import '../styles/WordCloud.css'
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import cloud from 'd3-cloud';
 
 
 const MAX_CLOUD_SIZE = 1250
 
-const WordCloud = ({ words }) => {
+const WordCloud = ({ words } : any) => {
   const svgRef = useRef();
 
   function logistic(x: number, max: number = 1, growth_rate: number = 1, x_midpoint: number = 0): number {
@@ -28,71 +28,76 @@ const WordCloud = ({ words }) => {
   }; /* TODO: remove? */
 
   useEffect(() => {
-    const svg = d3.select(svgRef.current);
-    svg.selectAll('*').remove(); /* Clean up previous word cloud renders */
+    if (svgRef.current){
+      console.log("svgRef", svgRef.current)
+      const svg = d3.select(svgRef.current);
+      svg.selectAll('*').remove(); /* Clean up previous word cloud renders */
+      
+      const dim = Math.min(window.innerWidth, window.innerHeight, MAX_CLOUD_SIZE)
+      const width = dim;
+      const height = dim;
+      console.log("DIM: ", dim)
+      svg.attr('width', width).attr('height', height);
+
+      let word_counts = words.map((w : any) => w[1])
+      let min_count = word_counts.reduce((a : any, b : any) => Math.min(a, b), word_counts[0])
+      let max_count = word_counts.reduce((a : any, b : any) => Math.max(a, b), word_counts[0])
     
-    const dim = Math.min(window.innerWidth, window.innerHeight, MAX_CLOUD_SIZE)
-    const width = dim;
-    const height = dim;
-    console.log("DIM: ", dim)
-    svg.attr('width', width).attr('height', height);
+      // const root = document.documentElement
+      // let scale = Number(window.getComputedStyle(root).getPropertyValue("font-size").slice(0, -2))
+      // scale = scale * 28
+      // console.log("SCALE: ", scale)
 
-    let word_counts = words.map((w) => w[1])
-    let min_count = word_counts.reduce((a, b) => Math.min(a, b), word_counts[0])
-    let max_count = word_counts.reduce((a, b) => Math.max(a, b), word_counts[0])
-  
-    // const root = document.documentElement
-    // let scale = Number(window.getComputedStyle(root).getPropertyValue("font-size").slice(0, -2))
-    // scale = scale * 28
-    // console.log("SCALE: ", scale)
+      let scaled_words = words.map((w : any) => ([w[0], normalize(w[1], min_count, max_count, 1, dim)]))  
+      scaled_words = scaled_words.map((w : any) => ([w[0], logistic(w[1], 50, .05, 45)]))  
 
-    let scaled_words = words.map(w => ([w[0], normalize(w[1], min_count, max_count, 1, dim)]))  
-    scaled_words = scaled_words.map(w => ([w[0], logistic(w[1], 50, .05, 45)]))  
+      const layout = cloud()
+        .words(scaled_words.map((d : any)=> ({ text: d[0], size:d[1]})))
+        .spiral("rectangular")
+        .size([width, height])
+        .padding(5)
+        .rotate(() => (~~(Math.random() * 6) - 3) * 30)
+        // .rotate(() => {let rotations = [0, 90, 270]; return rotations[Math.floor(Math.random() * rotations.length)] })
 
-    const layout = cloud()
-      .words(scaled_words.map(d => ({ text: d[0], size:d[1]})))
-      .spiral("rectangular")
-      .size([width, height])
-      .padding(5)
-      .rotate(() => (~~(Math.random() * 6) - 3) * 30)
-      .font('Times New Roman')
-      .fontSize(d => d.size)
-      .on('end', draw);
+        .font('Times New Roman')
+        .fontSize(d => d.size)
+        .on('end', draw);
 
-    layout.start();
+      layout.start();
 
-    function draw(words) {
-      const group = svg
-      .append('g')
-      .attr('transform', `translate(${width / 2},${height / 2})`)
-      .selectAll('text')
-      .data(words)
-      .enter()
-      .append('text')
-      .style('font-size', d => `${d.size}px`)
-      .style('font-weight', `700`)
-      .style('fill', function(d) { return randomColor(); })
-      .attr('text-anchor', 'middle')
-      .attr('transform', d => `translate(${d.x},${d.y})rotate(${d.rotate})`)
-      .style('opacity', 0) 
-      // .style('overflow', `visible`)
-      .text(d => d.text)
+      function draw(words) {
+        const group = svg
+        .append('g')
+        .attr('transform', `translate(${width / 2},${height / 2})`)
+        .selectAll('text')
+        .data(words)
+        .enter()
+        .append('text')
+        .style('font-size', (d : any) => `${d.size}px`)
+        .style('font-weight', `700`)
+        .style('fill', function() { return randomColor(); })
+        .attr('text-anchor', 'middle')
+        .attr('transform', (d : any)=> `translate(${d.x},${d.y})rotate(${d.rotate})`)
+        .style('opacity', 0) 
+        // .style('overflow', `visible`)
+        .text((d : any) => d.text)
 
-      group /* Makes words fade-in */
-      .transition()
-      .duration(800)
-      .style('opacity', 1)
-    }
+        group /* Makes words fade-in */
+        .transition()
+        .duration(800)
+        .style('opacity', 1)
+      }
+        // return () => {
+        //   svg.selectAll('*').remove(); /* Clean up previous word cloud renders */
+        // };
+        // svg.selectAll('*').remove(); /* Clean up previous word cloud renders */
+
+
+      // return () => window.removeEventListener('resize', handleResize);
       // return () => {
       //   svg.selectAll('*').remove(); /* Clean up previous word cloud renders */
       // };
-      // svg.selectAll('*').remove(); /* Clean up previous word cloud renders */
-
-
-    // return () => window.removeEventListener('resize', handleResize);
-    // return () => {
-    //   svg.selectAll('*').remove(); /* Clean up previous word cloud renders */
-    // };
+    }
   }, [words]);
 
 

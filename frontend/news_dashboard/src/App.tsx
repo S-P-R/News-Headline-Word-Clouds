@@ -1,5 +1,5 @@
 import './styles/App.css'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import WordCloud from './components/WordCloud'

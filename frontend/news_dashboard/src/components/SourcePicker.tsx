@@ -18,7 +18,7 @@ const SourcePicker = ({selectedSources, setSelectedSources, setGotSources} :  So
       async function setUp() {
         const response = await fetch('http://127.0.0.1:5000/sources'); /* TODO: replace URL */
         const data = await response.json();
-        const source_names = data.map(source_info => source_info.name)
+        const source_names = data.map((source_info : any) => source_info.name)
         setSources(source_names)
         setSelectedSources(source_names)
       }
@@ -36,7 +36,7 @@ const SourcePicker = ({selectedSources, setSelectedSources, setGotSources} :  So
       if (event.target.checked){
         setSelectedSources([...selectedSources, event.target.value])
       } else {
-        setSelectedSources(selectedSources.filter((e) => e !== event.target.value))
+        setSelectedSources(selectedSources.filter((e : any) => e !== event.target.value))
       }
     };
     

@@ -9,7 +9,7 @@ let stopwords = new Set<string> (["the", "of", "to", "and", "a", "in", "is", "it
 type WordCount = [word: string, count: number];
 
 interface FilterMenuProps {
-  setWordFreqs: React.Dispatch<React.SetStateAction>
+  setWordFreqs: any
 }
 
 
@@ -24,7 +24,7 @@ const FilterMenu = ({setWordFreqs} :  FilterMenuProps) => {
     
 
     /* TODO: error handling */
-    async function getWordFreqs(sourcesToFetch) {
+    async function getWordFreqs(sourcesToFetch : any) {
       let URL = 'http://127.0.0.1:5000/headlines?$filter=('/* TODO: Replace URL */
       for (let i = 0; i < sourcesToFetch.length; i++){
         URL += "source eq '" + sourcesToFetch[i] + "'"
