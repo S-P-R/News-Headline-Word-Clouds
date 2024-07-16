@@ -12,7 +12,7 @@ from exceptions import FilterParseException, OrderByException
 from sqlalchemy.exc import SQLAlchemyError
 from utils import process_orderby
 
-@app.route('/dates', methods=['GET'])
+@app.route('/api/dates', methods=['GET'])
 def get_dates():
     filters = request.args.get("$filter")
     ordering = request.args.get("$orderby")

@@ -13,7 +13,7 @@ from exceptions import FilterParseException, OrderByException
 from sqlalchemy.exc import SQLAlchemyError
 from utils import process_orderby
 
-@app.route('/headlines', methods=['GET'])
+@app.route('/api/headlines', methods=['GET'])
 def get_headlines():
     filters = request.args.get("$filter")
     ordering = request.args.get("$orderby")
