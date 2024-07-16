@@ -18,7 +18,7 @@ SELECT
     date,
     AVG(sentiment) AS avg_sentiment
 FROM 
-    headline
+    news_headlines.headline
 GROUP BY 
     date;
 
