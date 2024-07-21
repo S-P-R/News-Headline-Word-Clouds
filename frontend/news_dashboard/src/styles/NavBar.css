@@ -5,6 +5,7 @@
 }
 
 .title {
+    white-space: pre;
     font-family: "Almendra SC", serif;
     font-size: 2.5rem;
     margin: 0rem;

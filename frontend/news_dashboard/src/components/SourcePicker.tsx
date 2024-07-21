@@ -6,9 +6,9 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 
 interface SourcePickerProps {
-    selectedSources: any
-    setSelectedSources: any /* TODO: change to actual type */
-    setGotSources: any
+    selectedSources: string []
+    setSelectedSources: React.Dispatch<React.SetStateAction<string []>> /* TODO: change to actual type */
+    setGotSources:  React.Dispatch<React.SetStateAction<boolean>>
   }
 
 const SourcePicker = ({selectedSources, setSelectedSources, setGotSources} :  SourcePickerProps) => {    
@@ -16,7 +16,7 @@ const SourcePicker = ({selectedSources, setSelectedSources, setGotSources} :  So
 
     useEffect(() => {
       async function setUp() {
-        const response = await fetch('http://127.0.0.1:5000/sources'); /* TODO: replace URL */
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sources`); 
         const data = await response.json();
         const source_names = data.map((source_info : any) => source_info.name)
         setSources(source_names)
@@ -36,7 +36,7 @@ const SourcePicker = ({selectedSources, setSelectedSources, setGotSources} :  So
       if (event.target.checked){
         setSelectedSources([...selectedSources, event.target.value])
       } else {
-        setSelectedSources(selectedSources.filter((e : any) => e !== event.target.value))
+        setSelectedSources(selectedSources.filter((s : string) => s !== event.target.value))
       }
     };
     
@@ -47,7 +47,6 @@ const SourcePicker = ({selectedSources, setSelectedSources, setGotSources} :  So
         sx={{ m: 3 }}
         variant="standard"
         >
-          <FormLabel component="legend">Select one or more sources</FormLabel>
           <FormGroup>
             {sources.map((source)=> {
               return <FormControlLabel control={<Checkbox  defaultChecked value={source} onChange={handleSourceChange}/>} 

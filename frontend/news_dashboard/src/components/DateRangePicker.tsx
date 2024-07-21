@@ -3,28 +3,28 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
+import { Dayjs } from 'dayjs'
 import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc)
 
 interface DateRangePickerProps {
-  startDate: any
-  setStartDate: any /* TODO: change to actual type */
-  endDate: any
-  setEndDate: any
-  setGotDates: any
+  startDate: Dayjs
+  setStartDate: React.Dispatch<React.SetStateAction<Dayjs>>
+  endDate: Dayjs
+  setEndDate: React.Dispatch<React.SetStateAction<Dayjs>>
+  setGotDates: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDates} : DateRangePickerProps) => {    
   const [dates, setDates] = useState(new Set()) /* dates with headlines associated with them */
 
   /* Convert dates to standard format */
-  const formatDate = (date: Date) => {return dayjs(date).utc().format('YYYY-MM-DD')}
-
+  const formatDate = (date: Dayjs) => {return dayjs(date).utc().format('YYYY-MM-DD')}
 
   useEffect(() => {
     async function setUp() {
-      const response = await fetch('http://127.0.0.1:5000/dates?$orderby=date desc'); /* TODO: replace URL */
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dates?$orderby=date desc`); 
       const data = await response.json();
       const dateSet = new Set(data.map((dateInfo : any) => formatDate(dateInfo.date)))
       setDates(dateSet)
@@ -46,7 +46,7 @@ const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDa
   }, [startDate, endDate]);
   
 
-  const disableDates = (day: any) => {
+  const disableDates = (day: Dayjs) => {
     return !dates.has(formatDate(day))
   }
 

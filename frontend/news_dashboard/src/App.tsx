@@ -1,6 +1,8 @@
 import './styles/App.css'
 import { useState } from 'react'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { WordCount } from './types.tsx'
+
 
 import WordCloud from './components/WordCloud'
 import FilterMenu from './components/FilterMenu'
@@ -17,8 +19,10 @@ const theme = createTheme({
   }
 });
 
+
+
 function App() {
-  const [wordFreqs, setWordFreqs] = useState([]);
+  const [wordFreqs, setWordFreqs] = useState<WordCount []>([]);
   return (
     <ThemeProvider theme={theme}>
       <Navbar/>
