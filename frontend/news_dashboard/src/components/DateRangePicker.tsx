@@ -28,7 +28,7 @@ const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDa
   useEffect(() => {
     async function setUp() {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dates?$orderby=date descc`); 
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dates?$orderby=date desc`); 
         if (!response.ok){
           throw new Error()
         }
