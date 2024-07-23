@@ -5,14 +5,19 @@
     margin: .5rem;
 }
 
+.error-content {
+    flex-direction: column;
+}
+
+
 @media screen and (min-width: 640px) {
-    .content {
+    .working-content {
         flex-direction: row;
     }
 }
 
 @media screen and (max-width:  640px) {
-    .content {
+    .working-content {
         flex-direction: column-reverse;
     }
 }

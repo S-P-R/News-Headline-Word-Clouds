@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers';
+import { ErrorContext } from '../contexts/ErrorContext';
 import dayjs from 'dayjs';
 import { Dayjs } from 'dayjs'
 import utc from 'dayjs/plugin/utc';
@@ -18,19 +19,34 @@ interface DateRangePickerProps {
 
 const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDates} : DateRangePickerProps) => {    
   const [dates, setDates] = useState(new Set()) /* dates with headlines associated with them */
+  const { errors, setErrors } = useContext(ErrorContext);
+
 
   /* Convert dates to standard format */
   const formatDate = (date: Dayjs) => {return dayjs(date).utc().format('YYYY-MM-DD')}
 
   useEffect(() => {
     async function setUp() {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dates?$orderby=date desc`); 
-      const data = await response.json();
-      const dateSet = new Set(data.map((dateInfo : any) => formatDate(dateInfo.date)))
-      setDates(dateSet)
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dates?$orderby=date descc`); 
+        if (!response.ok){
+          throw new Error()
+        }
+        const data = await response.json();
 
-      setStartDate(dayjs(formatDate(data[0].date)))
-      setEndDate(dayjs(formatDate(data[0].date)))
+        const dateSet = new Set(data.map((dateInfo : any) => formatDate(dateInfo.date)))
+        setDates(dateSet)
+        setStartDate(dayjs(formatDate(data[0].date)))
+        setEndDate(dayjs(formatDate(data[0].date)))
+      } catch (e) {
+        if (e.message == "Failed to fetch"){
+          setErrors([...errors, `The /dates route of the news headline API used
+                                 by this page couldn't be reached`])
+        } else {
+          setErrors([...errors, `A problem occured when retrieving the dates that 
+                                 can be filtered on from the API`])
+        } 
+      }
     }
     setUp()
   }, []);

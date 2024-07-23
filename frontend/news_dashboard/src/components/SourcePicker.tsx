@@ -1,26 +1,42 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import FormLabel from '@mui/material/FormLabel'
 import FormControl from '@mui/material/FormControl'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
+import { ErrorContext } from '../contexts/ErrorContext';
 
 interface SourcePickerProps {
     selectedSources: string []
-    setSelectedSources: React.Dispatch<React.SetStateAction<string []>> /* TODO: change to actual type */
+    setSelectedSources: React.Dispatch<React.SetStateAction<string []>>
     setGotSources:  React.Dispatch<React.SetStateAction<boolean>>
   }
 
 const SourcePicker = ({selectedSources, setSelectedSources, setGotSources} :  SourcePickerProps) => {    
     const [sources, setSources] = useState([])
+    const { errors, setErrors } = useContext(ErrorContext);
 
     useEffect(() => {
       async function setUp() {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sources`); 
-        const data = await response.json();
-        const source_names = data.map((source_info : any) => source_info.name)
-        setSources(source_names)
-        setSelectedSources(source_names)
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sources`); 
+          if (!response.ok){
+            throw new Error()
+          }
+          const data = await response.json();
+          
+          const source_names = data.map((source_info : any) => source_info.name)
+          setSources(source_names)
+          setSelectedSources(source_names)
+        } catch (e) {
+          if (e.message == "Failed to fetch"){
+            setErrors([...errors, `The /sources route of the news headline API used
+                                   by this page couldn't be reached`])
+          } else {
+            setErrors([...errors, `A problem occured when retrieving the sources that 
+                                   can be filtered on from the API`])
+          } 
+        }
       }
       setUp()
     }, []);

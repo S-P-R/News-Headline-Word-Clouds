@@ -1,8 +1,9 @@
 import '../styles/FilterMenu.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import Button from '@mui/material/Button'
 import SourcePicker from './SourcePicker'
 import DateRangePicker from './DateRangePicker'
+import { ErrorContext } from '../contexts/ErrorContext';
 import { Dayjs } from 'dayjs'
 import { WordCount } from '../types.tsx'
 
@@ -13,50 +14,64 @@ interface FilterMenuProps {
 }
 
 const FilterMenu = ({setWordFreqs} :  FilterMenuProps) => {    
+    const { errors, setErrors } = useContext(ErrorContext);
+  
     const [gotSources, setGotSources] = useState<boolean>(false)
     const [selectedSources, setSelectedSources] = useState<string[]>([])
-   
     const [gotDates, setGotDates] = useState<boolean>(false)
-    
     const [startDate, setStartDate] = useState<Dayjs | null>(null)
     const [endDate, setEndDate] = useState<Dayjs | null>(null)
     
-
-    /* TODO: error handling */
     async function getWordFreqs(sourcesToFetch : string []) {
-      let URL = `${import.meta.env.VITE_API_URL}/api/headlines?$filter=(`
-      for (let i = 0; i < sourcesToFetch.length; i++){
-        URL += "source eq '" + sourcesToFetch[i] + "'"
-        if (i != sourcesToFetch.length - 1){
-          URL += ' or '
+      try {
+        let URL = `${import.meta.env.VITE_API_URL}/api/headlines?$filter=(`
+        for (let i = 0; i < sourcesToFetch.length; i++){
+          URL += "source eq '" + sourcesToFetch[i] + "'"
+          if (i != sourcesToFetch.length - 1){
+            URL += ' or '
+          }
         }
-      }
 
-      URL += ") and date ge '" + startDate?.format('YYYY-MM-DD') + "'"
-      URL += "and date le '" + endDate?.format('YYYY-MM-DD') + "'"
-      const response = await fetch(URL); 
-      const data = await response.json();
-      let wordFreqs = new Map<string, number>();
+        URL += ") and date ge '" + startDate?.format('YYYY-MM-DD') + "'"
+        URL += "and date le '" + endDate?.format('YYYY-MM-DD') + "'"
+        const response = await fetch(URL); 
+        const data = await response.json();
+        if (data.length == 0){
+          throw new Error("No Headlines")
+        }
 
-      for (const headlineInfo of data){
-        let headlineWords = headlineInfo.text.split(' ')
-        for (let word of headlineWords){
-          word = word.replace(/^[^\w\s]+|[^\w\s]+$/g, '') /* remove leading & trailing punctuation */
+        let wordFreqs = new Map<string, number>();
+        for (const headlineInfo of data){
+          let headlineWords = headlineInfo.text.split(' ')
+          for (let word of headlineWords){
+            word = word.replace(/^[^\w\s]+|[^\w\s]+$/g, '') /* remove leading & trailing punctuation */
 
-          if (word.length > 2 && !stopwords.has(word.toLowerCase())){
-            if (wordFreqs.has(word)) {
-              wordFreqs.set(word, wordFreqs.get(word)! + 1);
-            } else {
-              wordFreqs.set(word, 1);
+            if (word.length > 2 && !stopwords.has(word.toLowerCase())){
+              if (wordFreqs.has(word)) {
+                wordFreqs.set(word, wordFreqs.get(word)! + 1);
+              } else {
+                wordFreqs.set(word, 1);
+              }
             }
           }
         }
-      }
 
-      let toDisplay: WordCount[] = Array.from(wordFreqs.entries(), ([word, count]) => ({ word, count }))
-      toDisplay.sort((a, b) => b.count - a.count);
-      toDisplay = toDisplay.slice(0, 400)
-      setWordFreqs(toDisplay)
+        /* Only display most frequently occuring words */
+        let toDisplay: WordCount[] = Array.from(wordFreqs.entries(), ([word, count]) => ({ word, count }))
+        toDisplay.sort((a, b) => b.count - a.count);
+        toDisplay = toDisplay.slice(0, 400)
+        setWordFreqs(toDisplay)
+      } catch (e) {
+        if (e.message == "Failed to fetch"){
+          setErrors([...errors, `The /headlines route of the news headline API
+                                 used by this page couldn't be reached`])
+        } else if (e.message == "No Headlines"){
+          setErrors([...errors, `No headlines match the given filters`])
+        } else {
+          setErrors([...errors, `A problem occured when retrieving the headlines 
+                                 used to build the wordcloud from the API`])
+        } 
+      }
     }
 
       /* 
@@ -66,7 +81,7 @@ const FilterMenu = ({setWordFreqs} :  FilterMenuProps) => {
        * */
     useEffect(() => {
       if (gotSources && gotDates){
-        getWordFreqs(selectedSources)
+          getWordFreqs(selectedSources)
       }
     }, [gotSources, gotDates]);
 

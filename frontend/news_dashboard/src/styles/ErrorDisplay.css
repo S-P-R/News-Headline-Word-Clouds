@@ -1,0 +1,11 @@
+.error-display {
+    align-self: center;
+    flex-direction: row;
+}
+
+.error-image {
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+    border: .2rem solid #800020;
+}
