@@ -13,7 +13,7 @@ CREATE TABLE news_headlines.headline (
     PRIMARY KEY (text, date)
 );
 
-create view date_summary AS
+create view news_headlines.date_summary AS
 SELECT 
     date,
     AVG(sentiment) AS avg_sentiment
