@@ -17,6 +17,13 @@ interface DateRangePickerProps {
   setGotDates: React.Dispatch<React.SetStateAction<boolean>>
 }
 
+/**
+ * DateRangePicker
+ * 
+ * Allows user to specify the range of dates that headlines used to create the 
+ * wordcloud will fall inside
+ *
+ */
 const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDates} : DateRangePickerProps) => {    
     const [dates, setDates] = useState(new Set()) /* dates with headlines associated with them */
     const { errors, setErrors } = useContext(ErrorContext);
@@ -30,7 +37,7 @@ const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDa
             try {
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dates?$orderby=date desc`); 
                 if (!response.ok){
-                throw new Error()
+                    throw new Error()
                 }
                 const data = await response.json();
 
@@ -40,11 +47,11 @@ const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDa
                 setEndDate(dayjs(formatDate(data[0].date)))
             } catch (e) {
                 if (e.message == "Failed to fetch"){
-                setErrors([...errors, `The /dates route of the news headline API used
-                                        by this page couldn't be reached`])
+                    setErrors([...errors, `The /dates route of the news headline API used
+                                            by this page couldn't be reached`])
                 } else {
-                setErrors([...errors, `A problem occured when retrieving the dates that 
-                                        can be filtered on from the API`])
+                    setErrors([...errors, `A problem occured when retrieving the dates that 
+                                            can be filtered on from the API`])
                 } 
             }
         }
@@ -57,7 +64,7 @@ const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDa
    */
     useEffect(() => {
         if (startDate && endDate){
-        setGotDates(true)
+            setGotDates(true)
         }
     }, [startDate, endDate]);
   
@@ -68,13 +75,11 @@ const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDa
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} >
-      {/* TODO: switch to mobile date picker on small screen size */}
-      <p>Start Date</p>
-      <DatePicker shouldDisableDate={disableDates} value={startDate} onChange={(newValue) => setStartDate(newValue)}/>
-      <p>End Date</p>
-      <DatePicker shouldDisableDate={disableDates} value={endDate} onChange={(newValue) => setEndDate(newValue)}/>
-
-    
+        {/* TODO: switch to mobile date picker on small screen size */}
+        <p>Start Date</p>
+        <DatePicker shouldDisableDate={disableDates} value={startDate} onChange={(newValue) => setStartDate(newValue)}/>
+        <p>End Date</p>
+        <DatePicker shouldDisableDate={disableDates} value={endDate} onChange={(newValue) => setEndDate(newValue)}/>
     </LocalizationProvider>
   )
 }

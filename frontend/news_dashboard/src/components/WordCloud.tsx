@@ -12,6 +12,12 @@ interface WordCloudProps {
   words: WordCount[]
 }
 
+/**
+ * WordCloud
+ * 
+ * Create a wordcloud from an array of word-frequency pairs
+ *
+ */
 const WordCloud = ({ words } : WordCloudProps) => {
     const svgRef = useRef();
 
@@ -29,7 +35,7 @@ const WordCloud = ({ words } : WordCloudProps) => {
     }
 
     const randomColor = () => {
-        let colors = ["#434343", "#6e6e6e", "#8A8A8A"]
+        let colors = ["#434343", "#6e6e6e", "#8A8A8A"] /* shades of grey */
         return colors[Math.floor(Math.random() * colors.length)];
     }; 
 
@@ -49,8 +55,19 @@ const WordCloud = ({ words } : WordCloudProps) => {
         let min_count = word_counts.reduce((a : number, b : number) => Math.min(a, b), word_counts[0])
         let max_count = word_counts.reduce((a : number, b : number) => Math.max(a, b), word_counts[0])
 
-        let scaled_words = words.map((w : WordCount) => ({...w, count: normalize(w.count, min_count, max_count, 1, dim)}))  
-        scaled_words = scaled_words.map((w : WordCount) => ({...w, count: logistic(w.count, 50, .05, 45)})) 
+        /* 
+         * Scaling the word counts into a set range helps ensure that different 
+         * sizes of wordcloud look good 
+         */
+        let scaled_words = words.map((w : WordCount) => ({...w, count: normalize(w.count, min_count, 
+                                                                                 max_count, 1, dim)}))  
+        /* 
+         * Applying the logistic function to word counts helps stop a few words 
+         * from completely dominating the cloud, which I think looks bad
+         * The inputs to the function are pretty arbitrary, simply being what I
+         * think results in the best looking word clouds after some experimentation
+         */
+        scaled_words = scaled_words.map((w : WordCount) => ({...w, count: logistic(w.count, 50, .055, 45)})) 
 
         const layout = cloud()
             .words(scaled_words.map((w : WordCount)=> ({ text: w.word, size: w.count})))

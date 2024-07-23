@@ -12,6 +12,13 @@ interface SourcePickerProps {
     setGotSources:  React.Dispatch<React.SetStateAction<boolean>>
   }
 
+/**
+ * SourcePicker
+ * 
+ * Allows user to specify the set of sources headlines used to create the 
+ * wordcloud must come from 
+ *
+ */
 const SourcePicker = ({selectedSources, setSelectedSources, setGotSources} :  SourcePickerProps) => {    
     const [sources, setSources] = useState([])
     const { errors, setErrors } = useContext(ErrorContext);

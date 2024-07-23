@@ -6,7 +6,7 @@ import { WordCount } from './types.tsx'
 
 import WordCloud from './components/WordCloud'
 import FilterMenu from './components/FilterMenu'
-import Navbar from './components/NavBar';
+import NavBar from './components/NavBar';
 import ErrorDisplay from './components/ErrorDisplay.tsx';
 import { ErrorProvider, ErrorContext } from './contexts/ErrorContext.tsx'
 
@@ -23,6 +23,13 @@ const theme = createTheme({
 
 
 
+/**
+ * App
+ * 
+ * Lays out page, displaying different content depending on whether there's an 
+ * error or not
+ *
+ */
 function App() {
     const [wordFreqs, setWordFreqs] = useState<WordCount []>([]);
     const { errors } = useContext(ErrorContext);
@@ -38,7 +45,7 @@ function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Navbar/>
+            <NavBar/>
             {mainContent}
         </ThemeProvider>
     )

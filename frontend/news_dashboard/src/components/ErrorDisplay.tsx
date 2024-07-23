@@ -2,6 +2,12 @@ import '../styles/ErrorDisplay.css'
 import { useContext } from 'react';
 import { ErrorContext } from '../contexts/ErrorContext';
 
+/**
+ * ErrorDisplay
+ * 
+ * Displays errors to the user
+ *
+ */
 const ErrorDisplay = () => {
     const { errors } = useContext(ErrorContext);
     return (

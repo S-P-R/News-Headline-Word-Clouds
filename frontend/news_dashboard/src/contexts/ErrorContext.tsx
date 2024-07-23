@@ -5,9 +5,15 @@ type errorInfo = {
     setErrors: React.Dispatch<React.SetStateAction<string []>>
 }
 
+/* setErrors is initialized with a dummy value. Actual value is set by ErrorProvider */
 const ErrorContext = createContext<errorInfo>({errors: [], setErrors: () => {}});
 
-
+/**
+ * ErrorProvider
+ * 
+ * Simplifies the tracking of errors experienced by child components 
+ *
+ */
 const ErrorProvider = ({ children } : { children: ReactNode }) => {
     const [errors, setErrors] = useState<string []> ([])
 
