@@ -11,37 +11,37 @@ import ErrorDisplay from './components/ErrorDisplay.tsx';
 import { ErrorProvider, ErrorContext } from './contexts/ErrorContext.tsx'
 
 const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#800020', 
+    palette: {
+        primary: {
+            main: '#800020', 
+        },
     },
-  },
-  typography: {
-    fontFamily: 'Times New Roman',
-  }
+    typography: {
+        fontFamily: 'Times New Roman',
+    }
 });
 
 
 
 function App() {
-  const [wordFreqs, setWordFreqs] = useState<WordCount []>([]);
-  const { errors } = useContext(ErrorContext);
+    const [wordFreqs, setWordFreqs] = useState<WordCount []>([]);
+    const { errors } = useContext(ErrorContext);
 
-  let mainContent = <div className='content working-content'>
-                      <FilterMenu setWordFreqs={setWordFreqs}/>
-                      <WordCloud words={wordFreqs}/>
-                    </div>
-  
-  if (errors.length > 0){
-   mainContent = <div className='content error-content'> <ErrorDisplay/> </div>
-  }
+    let mainContent = <div className='content working-content'>
+                          <FilterMenu setWordFreqs={setWordFreqs}/>
+                          <WordCloud words={wordFreqs}/>
+                      </div>
 
-  return (
-    <ThemeProvider theme={theme}>
-        <Navbar/>
-        {mainContent}
-    </ThemeProvider>
-  )
+    if (errors.length > 0){
+        mainContent = <div className='content error-content'> <ErrorDisplay/> </div>
+    }
+
+    return (
+        <ThemeProvider theme={theme}>
+            <Navbar/>
+            {mainContent}
+        </ThemeProvider>
+    )
 }
 
 

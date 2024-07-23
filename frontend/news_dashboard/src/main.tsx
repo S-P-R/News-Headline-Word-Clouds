@@ -4,7 +4,7 @@ import { ErrorProvider } from './contexts/ErrorContext.tsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <ErrorProvider>
-    <App />
-  </ErrorProvider>
+    <ErrorProvider>
+        <App/>
+    </ErrorProvider>
 )

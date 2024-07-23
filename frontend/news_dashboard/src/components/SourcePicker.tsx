@@ -17,27 +17,27 @@ const SourcePicker = ({selectedSources, setSelectedSources, setGotSources} :  So
     const { errors, setErrors } = useContext(ErrorContext);
 
     useEffect(() => {
-      async function setUp() {
+        async function setUp() {
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sources`); 
-          if (!response.ok){
-            throw new Error()
-          }
-          const data = await response.json();
-          
-          const source_names = data.map((source_info : any) => source_info.name)
-          setSources(source_names)
-          setSelectedSources(source_names)
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sources`); 
+            if (!response.ok){
+                throw new Error()
+            }
+            const data = await response.json();
+            
+            const source_names = data.map((source_info : any) => source_info.name)
+            setSources(source_names)
+            setSelectedSources(source_names)
         } catch (e) {
-          if (e.message == "Failed to fetch"){
-            setErrors([...errors, `The /sources route of the news headline API used
-                                   by this page couldn't be reached`])
-          } else {
-            setErrors([...errors, `A problem occured when retrieving the sources that 
-                                   can be filtered on from the API`])
-          } 
+            if (e.message == "Failed to fetch"){
+                setErrors([...errors, `The /sources route of the news headline API used
+                                        by this page couldn't be reached`])
+            } else {
+                setErrors([...errors, `A problem occured when retrieving the sources that 
+                                        can be filtered on from the API`])
+            } 
         }
-      }
+        }
       setUp()
     }, []);
 
@@ -49,25 +49,26 @@ const SourcePicker = ({selectedSources, setSelectedSources, setGotSources} :  So
     }, [selectedSources])
 
     const handleSourceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.checked){
-        setSelectedSources([...selectedSources, event.target.value])
-      } else {
-        setSelectedSources(selectedSources.filter((s : string) => s !== event.target.value))
-      }
+        if (event.target.checked){
+            setSelectedSources([...selectedSources, event.target.value])
+        } else {
+            setSelectedSources(selectedSources.filter((s : string) => s !== event.target.value))
+        }
     };
     
     return (
-      <FormControl
-        required={true}
-        component="fieldset"
-        sx={{ m: 3 }}
-        variant="standard"
-        >
-          <FormGroup>
-            {sources.map((source)=> {
-              return <FormControlLabel control={<Checkbox  defaultChecked value={source} onChange={handleSourceChange}/>} 
-                                       key={source} label={source}/>
-            })}
+        <FormControl
+            required={true}
+            component="fieldset"
+            sx={{ m: 3 }}
+            variant="standard"
+            >
+            <FormGroup>
+                {sources.map((source)=> {
+                    return <FormControlLabel control={<Checkbox defaultChecked value={source}
+                                                                onChange={handleSourceChange}/>} 
+                                             key={source} label={source}/>
+                })}
             </FormGroup>
       </FormControl>
     )

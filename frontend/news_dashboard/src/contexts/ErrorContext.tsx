@@ -1,9 +1,8 @@
-import { createContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useState, ReactNode } from 'react';
 
 type errorInfo = {
     errors: string[]
-    // setErrors: React.Dispatch<React.SetStateAction<string []>>
-    setErrors: any
+    setErrors: React.Dispatch<React.SetStateAction<string []>>
 }
 
 const ErrorContext = createContext<errorInfo>({errors: [], setErrors: () => {}});
@@ -22,4 +21,4 @@ const ErrorProvider = ({ children } : { children: ReactNode }) => {
 export {
     ErrorProvider,
     ErrorContext,
-  }
+}

@@ -18,53 +18,53 @@ interface DateRangePickerProps {
 }
 
 const DateRangePicker = ({startDate, setStartDate, endDate, setEndDate, setGotDates} : DateRangePickerProps) => {    
-  const [dates, setDates] = useState(new Set()) /* dates with headlines associated with them */
-  const { errors, setErrors } = useContext(ErrorContext);
+    const [dates, setDates] = useState(new Set()) /* dates with headlines associated with them */
+    const { errors, setErrors } = useContext(ErrorContext);
 
 
-  /* Convert dates to standard format */
-  const formatDate = (date: Dayjs) => {return dayjs(date).utc().format('YYYY-MM-DD')}
+    /* Convert dates to standard format */
+    const formatDate = (date: Dayjs) => {return dayjs(date).utc().format('YYYY-MM-DD')}
 
-  useEffect(() => {
-    async function setUp() {
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dates?$orderby=date desc`); 
-        if (!response.ok){
-          throw new Error()
+    useEffect(() => {
+        async function setUp() {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/dates?$orderby=date desc`); 
+                if (!response.ok){
+                throw new Error()
+                }
+                const data = await response.json();
+
+                const dateSet = new Set(data.map((dateInfo : any) => formatDate(dateInfo.date)))
+                setDates(dateSet)
+                setStartDate(dayjs(formatDate(data[0].date)))
+                setEndDate(dayjs(formatDate(data[0].date)))
+            } catch (e) {
+                if (e.message == "Failed to fetch"){
+                setErrors([...errors, `The /dates route of the news headline API used
+                                        by this page couldn't be reached`])
+                } else {
+                setErrors([...errors, `A problem occured when retrieving the dates that 
+                                        can be filtered on from the API`])
+                } 
+            }
         }
-        const data = await response.json();
-
-        const dateSet = new Set(data.map((dateInfo : any) => formatDate(dateInfo.date)))
-        setDates(dateSet)
-        setStartDate(dayjs(formatDate(data[0].date)))
-        setEndDate(dayjs(formatDate(data[0].date)))
-      } catch (e) {
-        if (e.message == "Failed to fetch"){
-          setErrors([...errors, `The /dates route of the news headline API used
-                                 by this page couldn't be reached`])
-        } else {
-          setErrors([...errors, `A problem occured when retrieving the dates that 
-                                 can be filtered on from the API`])
-        } 
-      }
-    }
     setUp()
-  }, []);
+    }, []);
 
   /* 
    * Guarantee that gotDates is only set to true after startDate and 
    * endDate have been initialized 
    */
-  useEffect(() => {
-    if (startDate && endDate){
-      setGotDates(true)
-    }
-  }, [startDate, endDate]);
+    useEffect(() => {
+        if (startDate && endDate){
+        setGotDates(true)
+        }
+    }, [startDate, endDate]);
   
 
-  const disableDates = (day: Dayjs) => {
-    return !dates.has(formatDate(day))
-  }
+    const disableDates = (day: Dayjs) => {
+        return !dates.has(formatDate(day))
+    }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} >
