@@ -8,10 +8,11 @@ import pytest
 import sys
 import os
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'HeadlineAPI')))
 
-from HeadlineAPI.filter_parser import construct_parser
-from HeadlineAPI.models import Headline, Source, DateSummary
+from exceptions import FilterParseException
+from filter_parser import construct_parser
+from models import Headline, Source, DateSummary
 
 @pytest.mark.parametrize("test_input, expected_token_strs", 
                          [
