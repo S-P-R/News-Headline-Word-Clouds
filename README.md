@@ -11,8 +11,10 @@ Postgres database. Written in Python
 3. **Front End**: The News Dashboard itself - a single page application that displays
 news summary information. Made with React
 
-![alt text](<Screenshot 2024-07-23 at 6.07.58 PM.png>)
-*An image of the frontend*
+<img width="873" alt="Screenshot of frontend" src="https://github.com/user-attachments/assets/3cab023b-016e-4284-ae3f-351bbfcd7c05">
+
+*An image of the frontend* 
+
 
 ## Deployment
 The project is currently deployed on a Digital Ocean droplet and can be seen [here](http://159.223.174.37/)
