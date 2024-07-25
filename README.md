@@ -1,7 +1,7 @@
 # News Dashboard
 
 ## Description
-A fullstack news dashboard with 3 components: 
+A fullstack news dashboard with 3 components:
 
 1. **Web Scraper**: A web scraper that scrapes news headlines from the frontpage of several different news sources and places them into a
 Postgres database. Written in Python
@@ -13,8 +13,13 @@ news summary information. Made with React
 
 <img width="873" alt="Screenshot of frontend" src="https://github.com/user-attachments/assets/3cab023b-016e-4284-ae3f-351bbfcd7c05">
 
-*An image of the frontend* 
-
+*An image of the frontend*
 
 ## Deployment
+
 The project is currently deployed on a Digital Ocean droplet and can be seen [here](http://159.223.174.37/)
+
+## Contact
+
+Please feel free to contact me at [here](mailto:spr2354@gmail.com) if you have
+any questions about the project!

@@ -14,10 +14,11 @@ following fields: text, date, sentiment, source
 
 ## Installation & Configuration
 
-The following steps must be taken before the scraper can be used:
+After getting the code for the scraper the following steps must be taken before
+it can be run:
 
 1. **Install python3:** Ensure that python3 has been installed
-2. **Install Dependencies:** Install the project's dependencies, listed in the requirements.txt file of the scraper's folder:
+2. **Install Dependencies:** Install the scraper's dependencies, listed in the requirements.txt file of the scraper's folder:
 
     ```shell
     pip install -r requirements.txt
