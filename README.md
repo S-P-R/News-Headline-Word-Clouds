@@ -1,19 +1,19 @@
 # News Dashboard
 
 ## Description
-A fullstack news dashboard with 3 components:
+A full-stack news dashboard with 3 components *(links are to dedicated READMEs)*:
 
-1. **Web Scraper**: A web scraper that scrapes news headlines from the frontpage of several different news sources and places them into a
+1. [**Web Scraper**](scraper/README.md): A web scraper that scrapes news headlines from the front page of several different news sources and places them into a
 Postgres database. Written in Python
 
-2. **News Headline API**: A RESTful API that allows users to retrieve headline information. Created with Flask
+2. [**News Headline API**](backend/README.md): A RESTful API that allows users to retrieve headline information. Created with Flask
 
-3. **Front End**: The News Dashboard itself - a single page application that displays
+3. [**Front End**](frontend/README.md): The News Dashboard itself - a single-page application that displays
 news summary information. Made with React
 
 <img width="873" alt="Screenshot of frontend" src="https://github.com/user-attachments/assets/3cab023b-016e-4284-ae3f-351bbfcd7c05">
 
-*An image of the frontend*
+*An image of the front end*
 
 ## Deployment
 
