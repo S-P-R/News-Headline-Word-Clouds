@@ -8,7 +8,7 @@ import WordCloud from './components/WordCloud'
 import FilterMenu from './components/FilterMenu'
 import NavBar from './components/NavBar';
 import ErrorDisplay from './components/ErrorDisplay.tsx';
-import { ErrorProvider, ErrorContext } from './contexts/ErrorContext.tsx'
+import { ErrorContext } from './contexts/ErrorContext.tsx'
 
 const theme = createTheme({
     palette: {

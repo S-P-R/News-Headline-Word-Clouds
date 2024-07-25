@@ -11,6 +11,10 @@ import stopwords_list from '../utils/stopwords.tsx'
 /* List of words that will not be used to create the wordcloud  */
 let stopwords = new Set<string> (stopwords_list)
 
+interface FilterMenuProps {
+    setWordFreqs: React.Dispatch<React.SetStateAction<WordCount []>>
+}
+
 /**
  * FilterMenu
  * 

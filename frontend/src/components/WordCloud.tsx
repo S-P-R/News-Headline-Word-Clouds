@@ -1,7 +1,7 @@
 import '../styles/WordCloud.css'
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import cloud, { Word } from 'd3-cloud';
+import cloud from 'd3-cloud';
 import { WordCount } from '../types.tsx'
 
 
