@@ -1,6 +1,7 @@
 # News Dashboard
 
 ## Description
+
 A full-stack news dashboard with 3 components *(links are to dedicated READMEs)*:
 
 1. [**Web Scraper**](scraper/README.md): A web scraper that scrapes news headlines from the front page of several different news sources and places them into a
@@ -17,9 +18,9 @@ news summary information. Made with React
 
 ## Deployment
 
-The project is currently deployed on a Digital Ocean droplet and can be seen [here](http://159.223.174.37/)
+The project is currently [deployed on a Digital Ocean droplet](http://159.223.174.37/)
 
 ## Contact
 
-Please feel free to contact me at [here](mailto:spr2354@gmail.com) if you have
+Please feel free to [contact me](mailto:spr2354@gmail.com) if you have
 any questions about the project!
