@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+WORKDIR /app
+
+COPY requirements.txt HeadlineAPI ./
+# libpq-dev and gcc are necessary to install psycopg2, one of the packages in
+# requirements.txt 
+RUN apt-get update && apt-get -y install libpq-dev gcc && apt-get clean
+RUN pip install -r ./requirements.txt
+# This COPY command is separate from the other one so that docker's caching of
+# the other COPY command and the following RUN command won't be invalidated
+# every time a file in HeadlineAPI is changed
+COPY HeadlineAPI ./
+
+EXPOSE 5000
+CMD ["gunicorn", "-b", ":5000", "app:app"]

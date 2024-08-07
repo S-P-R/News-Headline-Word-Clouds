@@ -22,7 +22,7 @@ elaborated upon in the Usage section
 After getting the code for the API the following steps must be taken before
 it can be run:
 
-1. **Install Dependencies:** Install the API's dependencies, listed in the 
+1. **Install Dependencies:** Install the API's dependencies, listed in the
 HeadlineAPI's requirements.txt file
 
     ```shell
@@ -60,7 +60,7 @@ Clients can order results by any of a resources properties. For headlines these
 properties are *text*, *date*, *sentiment* and *source*. For sources they're
 *name* and *link*. For dates they're *date* and *avg_sentiment*.
 
-After specifying the property to use for ordering they must include the order
+After specifying the property to use for ordering, clients must include the order
 itself. The word 'asc' is used to tell the API to return results in ascending
 order and the word 'desc' is used to tell it to return results in descending
 order.
